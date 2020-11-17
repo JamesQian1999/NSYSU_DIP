@@ -10,3 +10,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 # sudo apt-get install python3-matplotlib
 import math
+
+# main window
+window = tk.Tk()
+window.title("Digital Image HW1")  # Whindow title
+window.geometry('1000x800')  # Window size
+window.configure(background='white')   # window color
