@@ -21,8 +21,7 @@ window.configure(background='white')   # window color
 def reset():
     global image2, input_image_cv2, input_image_cv2_tmp
     # refresh image
-    adjust_image = ImageTk.PhotoImage(Image.fromarray(
-        cv2.cvtColor(input_image_cv2, cv2.COLOR_BGR2RGB)))
+    adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(input_image_cv2, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
     input_image_cv2_tmp = input_image_cv2
@@ -43,13 +42,11 @@ def open_file():
         global input_image_cv2, input_image_cv2_tmp
         input_image_cv2 = cv2.imread(openfile, 1)
         # Resize image to fit the label
-        input_image_cv2 = cv2.resize(
-            input_image_cv2, (300, 300), interpolation=cv2.INTER_CUBIC)
+        input_image_cv2 = cv2.resize(input_image_cv2, (300, 300), interpolation=cv2.INTER_CUBIC)
         # Resize image to fit the label
         global photo
         # Transform image into ImageTk form
-        photo = ImageTk.PhotoImage(image=Image.fromarray(
-            cv2.cvtColor(input_image_cv2, cv2.COLOR_BGR2RGB)))
+        photo = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(input_image_cv2, cv2.COLOR_BGR2RGB)))
         # show
         global image1, image2
         # creat label for original image
@@ -74,8 +71,7 @@ def red():
     # set blue and green channels to 0
     r[:, :, 0] = 0
     r[:, :, 1] = 0
-    adjust_image = ImageTk.PhotoImage(
-        Image.fromarray(cv2.cvtColor(r, cv2.COLOR_BGR2RGB)))
+    adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(r, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
 
@@ -86,8 +82,7 @@ def green():
     # set blue and green channels to 0
     g[:, :, 0] = 0
     g[:, :, 2] = 0
-    adjust_image = ImageTk.PhotoImage(
-        Image.fromarray(cv2.cvtColor(g, cv2.COLOR_BGR2RGB)))
+    adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(g, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
 
@@ -104,12 +99,9 @@ def blue():
     image2.Image = adjust_image
 
 
-tk.Button(window, text="Red component",  width=12,
-          height=3, command=red).place(x=85, y=330)
-tk.Button(window, text="Green component",  width=12,
-          height=3, command=green).place(x=215, y=330)
-tk.Button(window, text="Blue component",  width=12,
-          height=3, command=blue).place(x=345, y=330)
+tk.Button(window, text="Red component",  width=12, height=3, command=red).place(x=85, y=330)
+tk.Button(window, text="Green component",  width=12, height=3, command=green).place(x=215, y=330)
+tk.Button(window, text="Blue component",  width=12, height=3, command=blue).place(x=345, y=330)
 
 
 def HSI():
@@ -125,8 +117,7 @@ def HSI():
     for i in range(rows):
         for j in range(cols):
             num = 0.5 * ((R[i, j] - G[i, j]) + (R[i, j] - B[i, j]))
-            den = np.sqrt((R[i, j] - G[i, j]) ** 2 +
-                          (R[i, j] - B[i, j]) * (G[i, j] - B[i, j]))
+            den = np.sqrt((R[i, j] - G[i, j]) ** 2 +(R[i, j] - B[i, j]) * (G[i, j] - B[i, j]))
             theta = float(np.arccos(num / den))
 
             if den == 0:
@@ -150,19 +141,30 @@ def HSI():
             hsi[i, j, 1] = S * 255
             hsi[i, j, 2] = I * 255
 
-    adjust_image = ImageTk.PhotoImage(
-        Image.fromarray(cv2.cvtColor(hsi, cv2.COLOR_BGR2RGB)))
+    adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(hsi, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
 
     global hsi_label
-    hsi_label.config(text="Hue:\n"+str(H)
-                     [:7] + "\n\nSaturation:\n"+str(S)[:7]+"\n\nIntensity:\n"+str(I)[:7])
+    hsi_label.config(text="Hue:\n"+str(H)[:7] + "\n\nSaturation:\n"+str(S)[:7]+"\n\nIntensity:\n"+str(I)[:7])
 
 
-tk.Button(window, text="Blue component",  width=12,
-          height=3, command=HSI).place(x=500, y=330)
+tk.Button(window, text="HSI",  width=12, height=3, command=HSI).place(x=540, y=330)
 hsi_label = tk.Label(window, width=10, height=10)
 hsi_label.place(x=890, y=20)
+
+
+def Enhance():
+    enhance = input_image_cv2.copy()
+
+    enhance = 255 - enhance
+
+    adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(enhance, cv2.COLOR_BGR2RGB)))
+    image2.config(image=adjust_image, width=300, height=300)
+    image2.Image = adjust_image
+
+tk.Button(window, text="Enhance the detail",  width=14, height=3, command=Enhance).place(x=735, y=330)
+
+
 
 window.mainloop()
