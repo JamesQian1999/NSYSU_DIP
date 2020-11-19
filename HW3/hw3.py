@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import math
 
 # main window
-window = tk.Tk()
+window = tk.Tk()  
 window.title("Digital Image HW2")  # Whindow title
 window.geometry('1000x800')  # Window size
 window.configure(background='white')   # window color
