@@ -203,6 +203,10 @@ def Enhance():
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
     forget()
+    try:
+        hsi_label.destroy()
+    except:
+        pass
 
 tk.Button(window, text="Enhance the detail",  width=14, height=3, command=Enhance).place(x=735, y=330)
 
@@ -249,6 +253,7 @@ def smoothing_and_sharping():
     HSI_SHAPE.place(x=780, y=500)
     HSI_SHAPE_label = tk.Label(window, text="HSI SHAPE",width=10, height=1)
     HSI_SHAPE_label.place(x=780, y=655)
+
 
 tk.Button(window, text="Smoothing and Sharping",  width=18, height=3, command=smoothing_and_sharping).place(x=705, y=430)
 
