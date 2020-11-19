@@ -258,4 +258,15 @@ def smoothing_and_sharping():
 tk.Button(window, text="Smoothing and Sharping",  width=18, height=3, command=smoothing_and_sharping).place(x=705, y=430)
 
 
+def feather():
+    global input_image_cv2
+    f = input_image_cv2.copy()
+    
+
+    adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(f, cv2.COLOR_BGR2RGB)))
+    image2.config(image=adjust_image, width=300, height=300)
+    image2.Image = adjust_image
+
+tk.Button(window, text="Segment the feather",  width=18, height=3, command=feather).place(x=505, y=430)
+
 window.mainloop()
