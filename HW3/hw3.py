@@ -18,7 +18,7 @@ window.geometry('1000x800')  # Window size
 window.configure(background='white')   # window color
 
 
-def forget():
+def forget_smooth_shape():
     try:
         global RGB_SMOOTH, HSI_SMOOTH, RGB_SHAPE, HSI_SHAPE, RGB_SMOOTH_label, HSI_SMOOTH_label, RGB_SHAPE_label, HSI_SHAPE_label
         RGB_SMOOTH.destroy()
@@ -32,18 +32,29 @@ def forget():
     except:
         pass
 
+def forget_HSI():
+    try:
+        global HSI_h, HSI_s, HSI_i, HSI_h_label, HSI_s_label ,HSI_i_label
+        HSI_h.destroy()
+        HSI_s.destroy()
+        HSI_i.destroy()
+        HSI_h_label.destroy()
+        HSI_s_label.destroy()
+        HSI_i_label.destroy()
+    except:
+        pass
+
+
 def reset():
     global image2, input_image_cv2, input_image_cv2_tmp
     # refresh image
-    forget()
+    forget_smooth_shape()
+    forget_HSI()
     adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(input_image_cv2, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
     input_image_cv2_tmp = input_image_cv2
-    try:
-        hsi_label.destroy()
-    except:
-        pass
+
 
 
 tk.Button(window, text="Reset",  height=5, width=20, command=reset).place(x=70, y=640)  # Creat the reset button
@@ -97,11 +108,8 @@ def red():
     adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(r, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
-    forget()
-    try:
-        hsi_label.destroy()
-    except:
-        pass
+    forget_smooth_shape()
+    forget_HSI()
 
 
 def green():
@@ -113,11 +121,8 @@ def green():
     adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(g, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
-    forget()
-    try:
-        hsi_label.destroy()
-    except:
-        pass
+    forget_smooth_shape()
+    forget_HSI()
 
 
 def blue():
@@ -130,11 +135,8 @@ def blue():
         Image.fromarray(cv2.cvtColor(b, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
-    forget()
-    try:
-        hsi_label.destroy()
-    except:
-        pass
+    forget_smooth_shape()
+    forget_HSI()
 
 
 tk.Button(window, text="Red component",  width=12, height=3, command=red).place(x=85, y=330)
@@ -182,12 +184,30 @@ def HSI():
     adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(hsi, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
+    forget_smooth_shape()
 
-    global hsi_label
-    hsi_label = tk.Label(window, width=10, height=10)
-    hsi_label.place(x=890, y=20)
-    hsi_label.config(text="Hue:\n"+str(H)[:7] + "\n\nSaturation:\n"+str(S)[:7]+"\n\nIntensity:\n"+str(I)[:7])
+    global hsi_h ,HSI_h, hsi_s, HSI_s, hsi_i, HSI_i, HSI_h_label,  HSI_s_label ,HSI_i_label
+    hsi_h = cv2.resize(hsi[:,:,0], (150, 150), interpolation = cv2.INTER_CUBIC)
+    hsi_h = ImageTk.PhotoImage(image=Image.fromarray(hsi_h))
+    HSI_h = tk.Label(window, image=hsi_h, width=150, height=150)
+    HSI_h.place(x=460, y=500)
+    HSI_h_label = tk.Label(window, text="H",width=10, height=1)
+    HSI_h_label.place(x=460, y=655)
+    
+    hsi_s = cv2.resize(hsi[:,:,1], (150, 150), interpolation = cv2.INTER_CUBIC)
+    hsi_s = ImageTk.PhotoImage(image=Image.fromarray(hsi_s))
+    HSI_s = tk.Label(window, image=hsi_s, width=150, height=150)
+    HSI_s.place(x=620, y=500)
+    HSI_s_label = tk.Label(window, text="S",width=10, height=1)
+    HSI_s_label.place(x=620, y=655)
 
+    hsi_i = cv2.resize(hsi[:,:,2], (150, 150), interpolation = cv2.INTER_CUBIC)
+    hsi_i = ImageTk.PhotoImage(image=Image.fromarray(hsi_i))
+    HSI_i = tk.Label(window, image=hsi_i, width=150, height=150)
+    HSI_i.place(x=780, y=500)
+    HSI_i_label = tk.Label(window, text="I",width=10, height=1)
+    HSI_i_label.place(x=780, y=655)
+    
     return hsi
 
 
@@ -202,11 +222,8 @@ def Enhance():
     adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(enhance, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
-    forget()
-    try:
-        hsi_label.destroy()
-    except:
-        pass
+    forget_smooth_shape()
+    forget_HSI()
 
 tk.Button(window, text="Enhance the detail",  width=14, height=3, command=Enhance).place(x=735, y=330)
 
@@ -224,35 +241,35 @@ def smoothing_and_sharping():
     rgb_shape = cv2.filter2D(rgb, -1, kernel)
     hsi_shape = cv2.filter2D(hsi, -1, kernel)
 
-
     rgb_smooth = cv2.resize(rgb_smooth, (150, 150), interpolation = cv2.INTER_CUBIC)
-    hsi_smooth = cv2.resize(hsi_smooth, (150, 150), interpolation = cv2.INTER_CUBIC)
-    rgb_shape = cv2.resize(rgb_shape, (150, 150), interpolation = cv2.INTER_CUBIC)
-    hsi_shape = cv2.resize(hsi_shape, (150, 150), interpolation = cv2.INTER_CUBIC)
     rgb_smooth = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(rgb_smooth, cv2.COLOR_BGR2RGB)))
-    hsi_smooth = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(hsi_smooth, cv2.COLOR_BGR2RGB)))
-    rgb_shape = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(rgb_shape, cv2.COLOR_BGR2RGB)))
-    hsi_shape = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(hsi_shape, cv2.COLOR_BGR2RGB)))
-
     RGB_SMOOTH = tk.Label(window, image=rgb_smooth, width=150, height=150)
     RGB_SMOOTH.place(x=300, y=500)
     RGB_SMOOTH_label = tk.Label(window, text="RGB Smooth",width=10, height=1)
     RGB_SMOOTH_label.place(x=300, y=655)
 
+    hsi_smooth = cv2.resize(hsi_smooth, (150, 150), interpolation = cv2.INTER_CUBIC)
+    hsi_smooth = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(hsi_smooth, cv2.COLOR_BGR2RGB)))
     HSI_SMOOTH = tk.Label(window, image=hsi_smooth, width=150, height=150)
     HSI_SMOOTH.place(x=460, y=500)
     HSI_SMOOTH_label = tk.Label(window, text="HSI Smooth",width=10, height=1)
     HSI_SMOOTH_label.place(x=460, y=655)
 
+    rgb_shape = cv2.resize(rgb_shape, (150, 150), interpolation = cv2.INTER_CUBIC)
+    rgb_shape = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(rgb_shape, cv2.COLOR_BGR2RGB)))
     RGB_SHAPE = tk.Label(window, image=rgb_shape, width=150, height=150)
     RGB_SHAPE.place(x=620, y=500)
     RGB_SHAPE_label = tk.Label(window, text="RGB SHAPE",width=10, height=1)
     RGB_SHAPE_label.place(x=620, y=655)
 
+    hsi_shape = cv2.resize(hsi_shape, (150, 150), interpolation = cv2.INTER_CUBIC)
+    hsi_shape = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(hsi_shape, cv2.COLOR_BGR2RGB)))
     HSI_SHAPE = tk.Label(window, image=hsi_shape, width=150, height=150)
     HSI_SHAPE.place(x=780, y=500)
     HSI_SHAPE_label = tk.Label(window, text="HSI SHAPE",width=10, height=1)
     HSI_SHAPE_label.place(x=780, y=655)
+
+    forget_HSI()
 
 
 tk.Button(window, text="Smoothing and Sharping",  width=18, height=3, command=smoothing_and_sharping).place(x=705, y=430)
@@ -266,6 +283,8 @@ def feather():
     adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(f, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
+    forget_smooth_shape()
+    forget_HSI()
 
 tk.Button(window, text="Segment the feather",  width=18, height=3, command=feather).place(x=505, y=430)
 
