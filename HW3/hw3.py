@@ -277,10 +277,73 @@ tk.Button(window, text="Smoothing and Sharping",  width=18, height=3, command=sm
 
 def feather():
     global input_image_cv2
-    f = input_image_cv2.copy()
-    
+    finalload = input_image_cv2.copy()
+    global step1, step2, step3, STEP1 ,STEP2, STEP3
 
-    adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(f, cv2.COLOR_BGR2RGB)))
+    rows = int(finalload.shape[0])
+    cols = int(finalload.shape[1])
+
+    for i in range(rows):
+        for j in range(cols):
+            B,G,R=finalload[i,j]
+            B=int(B)
+            G=int(G)
+            R=int(R)
+            up=0.5*((R-G)+(R-B))
+            down=math.sqrt(pow((R-G),2)+(R-B)*(G-B))
+            sita=((math.acos(up/down))*180)/(math.pi)
+            sita=(sita/360)*255
+            if B>G:	sita=255-sita
+            Hue=sita
+            if Hue<120 or Hue>220:	finalload[i,j]=[0,0,0]
+    step1 = cv2.resize(finalload, (150, 150), interpolation = cv2.INTER_CUBIC)
+    step1 = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(step1, cv2.COLOR_BGR2RGB)))
+    STEP1 = tk.Label(window, image=step1, width=150, height=150)
+    STEP1.place(x=460, y=500)
+    STEP1_label = tk.Label(window, text="Step 1",width=10, height=1)
+    STEP1_label.place(x=460, y=655)
+
+    for i in range(rows):
+        for j in range(cols):
+            B,G,R=finalload[i,j]
+            B=int(B)
+            G=int(G)
+            R=int(R)
+            if R+G+B:Satu = 255*(1-(3/(R+G+B))*min(R,G,B))
+            else: Satu = 0 
+            if (Satu<50 or Satu>120):	finalload[i,j]=[0,0,0]
+    step2 = cv2.resize(finalload, (150, 150), interpolation = cv2.INTER_CUBIC)
+    step2 = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(step2, cv2.COLOR_BGR2RGB)))
+    STEP2 = tk.Label(window, image=step2, width=150, height=150)
+    STEP2.place(x=620, y=500)
+    STEP2_label = tk.Label(window, text="Step 2",width=10, height=1)
+    STEP2_label.place(x=620, y=655)
+
+    for i in range(rows):
+        for j in range(cols):
+            B,G,R=finalload[i,j]
+            B=int(B)
+            G=int(G)
+            R=int(R)
+            up=0.5*((R-G)+(R-B))
+            down=math.sqrt(pow((R-G),2)+(R-B)*(G-B))
+            if down :sita=((math.acos(up/down))*180)/(math.pi)
+            else: sita=0
+            sita=(sita/360)*255
+            if B>G:	sita=255-sita
+            Hue=sita
+            if R+G+B:Satu = 255*(1-(3/(R+G+B))*min(R,G,B))
+            else: Satu = 0 
+            if (Hue<120 or Hue>220) or (Satu<50 or Satu>120):	finalload[i,j]=[0,0,0]
+    step3 = cv2.resize(finalload, (150, 150), interpolation = cv2.INTER_CUBIC)
+    step3 = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(step3, cv2.COLOR_BGR2RGB)))
+    STEP3 = tk.Label(window, image=step3, width=150, height=150)
+    STEP3.place(x=780, y=500)
+    STEP3_label = tk.Label(window, text="Step 3",width=10, height=1)
+    STEP3_label.place(x=780, y=655)
+
+
+    adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(finalload, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
     forget_smooth_shape()
