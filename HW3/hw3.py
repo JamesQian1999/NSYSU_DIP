@@ -18,7 +18,7 @@ window.geometry('1000x800')  # Window size
 window.configure(background='white')   # window color
 
 
-def forget_smooth_shape():
+def forget_smooth_shape(): # remove the forget_smooth_shape label
     try:
         global RGB_SMOOTH, HSI_SMOOTH, RGB_SHAPE, HSI_SHAPE, RGB_SMOOTH_label, HSI_SMOOTH_label, RGB_SHAPE_label, HSI_SHAPE_label
         RGB_SMOOTH.destroy()
@@ -32,7 +32,7 @@ def forget_smooth_shape():
     except:
         pass
 
-def forget_HSI():
+def forget_HSI(): # remove the HSI label
     try:
         global HSI_h, HSI_s, HSI_i, HSI_h_label, HSI_s_label ,HSI_i_label
         HSI_h.destroy()
@@ -44,8 +44,19 @@ def forget_HSI():
     except:
         pass
 
+def forget_feather(): #remove the feather label
+    try:
+        global STEP1 ,STEP2, STEP3,STEP1_label,STEP2_label,STEP3_label
+        STEP1.destroy()
+        STEP2.destroy()
+        STEP3.destroy()
+        STEP1_label.destroy()
+        STEP2_label.destroy()
+        STEP3_label.destroy()
+    except:
+        pass
 
-def reset():
+def reset(): # reset the image
     global image2, input_image_cv2, input_image_cv2_tmp
     # refresh image
     forget_smooth_shape()
@@ -110,6 +121,7 @@ def red():
     image2.Image = adjust_image
     forget_smooth_shape()
     forget_HSI()
+    forget_feather()
 
 
 def green():
@@ -123,6 +135,7 @@ def green():
     image2.Image = adjust_image
     forget_smooth_shape()
     forget_HSI()
+    forget_feather()
 
 
 def blue():
@@ -137,6 +150,7 @@ def blue():
     image2.Image = adjust_image
     forget_smooth_shape()
     forget_HSI()
+    forget_feather()
 
 
 tk.Button(window, text="Red component",  width=12, height=3, command=red).place(x=85, y=330)
@@ -144,7 +158,7 @@ tk.Button(window, text="Green component",  width=12, height=3, command=green).pl
 tk.Button(window, text="Blue component",  width=12, height=3, command=blue).place(x=345, y=330)
 
 
-def HSI():
+def HSI(): # used the HSI formula
     hsi = input_image_cv2.copy()
 
     rows = int(hsi.shape[0])
@@ -176,16 +190,19 @@ def HSI():
 
             H = H / (2 * 3.14159265)
             I = sum / 3.0
-            # 輸出HSI圖像，擴充到255以方便顯示，一般H分量在[0,2pi]之間，S和I在[0,1]之間
+
+            # let HSI image visible
             hsi[i, j, 0] = H * 255
             hsi[i, j, 1] = S * 255
             hsi[i, j, 2] = I * 255
 
+    # refresh the image
     adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(hsi, cv2.COLOR_BGR2RGB)))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
     forget_smooth_shape()
 
+    # show the HSI component
     global hsi_h ,HSI_h, hsi_s, HSI_s, hsi_i, HSI_i, HSI_h_label,  HSI_s_label ,HSI_i_label
     hsi_h = cv2.resize(hsi[:,:,0], (150, 150), interpolation = cv2.INTER_CUBIC)
     hsi_h = ImageTk.PhotoImage(image=Image.fromarray(hsi_h))
@@ -207,6 +224,8 @@ def HSI():
     HSI_i.place(x=780, y=500)
     HSI_i_label = tk.Label(window, text="I",width=10, height=1)
     HSI_i_label.place(x=780, y=655)
+
+    forget_feather()
     
     return hsi
 
@@ -217,6 +236,7 @@ tk.Button(window, text="HSI",  width=12, height=3, command=HSI).place(x=540, y=3
 def Enhance():
     enhance = input_image_cv2.copy()
 
+    # used 
     enhance = 255 - enhance
 
     adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(enhance, cv2.COLOR_BGR2RGB)))
@@ -224,6 +244,7 @@ def Enhance():
     image2.Image = adjust_image
     forget_smooth_shape()
     forget_HSI()
+    forget_feather()
 
 tk.Button(window, text="Enhance the detail",  width=14, height=3, command=Enhance).place(x=735, y=330)
 
@@ -270,6 +291,7 @@ def smoothing_and_sharping():
     HSI_SHAPE_label.place(x=780, y=655)
 
     forget_HSI()
+    forget_feather()
 
 
 tk.Button(window, text="Smoothing and Sharping",  width=18, height=3, command=smoothing_and_sharping).place(x=705, y=430)
@@ -278,7 +300,7 @@ tk.Button(window, text="Smoothing and Sharping",  width=18, height=3, command=sm
 def feather():
     global input_image_cv2
     finalload = input_image_cv2.copy()
-    global step1, step2, step3, STEP1 ,STEP2, STEP3
+    global step1, step2, step3, STEP1 ,STEP2, STEP3, STEP1_label,STEP2_label,STEP3_label
 
     rows = int(finalload.shape[0])
     cols = int(finalload.shape[1])
@@ -303,6 +325,7 @@ def feather():
     STEP1_label = tk.Label(window, text="Step 1",width=10, height=1)
     STEP1_label.place(x=460, y=655)
 
+
     for i in range(rows):
         for j in range(cols):
             B,G,R=finalload[i,j]
@@ -318,6 +341,7 @@ def feather():
     STEP2.place(x=620, y=500)
     STEP2_label = tk.Label(window, text="Step 2",width=10, height=1)
     STEP2_label.place(x=620, y=655)
+
 
     for i in range(rows):
         for j in range(cols):
