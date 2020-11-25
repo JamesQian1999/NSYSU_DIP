@@ -191,7 +191,7 @@ def HSI(): # used the HSI formula
             hsi[i, j, 2] = I * 255
 
     # refresh the image
-    adjust_image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(hsi, cv2.COLOR_BGR2RGB)))
+    adjust_image = ImageTk.PhotoImage(Image.fromarray(hsi))
     image2.config(image=adjust_image, width=300, height=300)
     image2.Image = adjust_image
     forget_smooth_shape()
@@ -253,10 +253,7 @@ def smoothing_and_sharping():
     rgb_smooth = cv2.filter2D(rgb, -1, kernel)
     hsi_smooth = cv2.filter2D(hsi, -1, kernel)
     
-    # set shape kernel
-    #kernel = np.array([[0,1,0],[1,-4,1],[0,1,0]])
-    #rgb_shape = cv2.filter2D(rgb, -1, kernel)
-    #hsi_shape = cv2.filter2D(hsi, -1, kernel)
+    # set sharp kernel
     rgb_shape = rgb + cv2.Laplacian(rgb,-1)
     hsi_shape = hsi + cv2.Laplacian(hsi,-1)
 
@@ -270,7 +267,7 @@ def smoothing_and_sharping():
     RGB_SMOOTH_label.place(x=300, y=655)
 
     hsi_smooth = cv2.resize(hsi_smooth, (150, 150), interpolation = cv2.INTER_CUBIC)
-    hsi_smooth = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(hsi_smooth, cv2.COLOR_BGR2RGB)))
+    hsi_smooth = ImageTk.PhotoImage(image=Image.fromarray(hsi_smooth))
     HSI_SMOOTH = tk.Label(window, image=hsi_smooth, width=150, height=150)
     HSI_SMOOTH.place(x=460, y=500)
     HSI_SMOOTH_label = tk.Label(window, text="HSI Smooth",width=10, height=1)
@@ -280,14 +277,14 @@ def smoothing_and_sharping():
     rgb_shape = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(rgb_shape, cv2.COLOR_BGR2RGB)))
     RGB_SHAPE = tk.Label(window, image=rgb_shape, width=150, height=150)
     RGB_SHAPE.place(x=620, y=500)
-    RGB_SHAPE_label = tk.Label(window, text="RGB SHAPE",width=10, height=1)
+    RGB_SHAPE_label = tk.Label(window, text="RGB SHARP",width=10, height=1)
     RGB_SHAPE_label.place(x=620, y=655)
 
     hsi_shape = cv2.resize(hsi_shape, (150, 150), interpolation = cv2.INTER_CUBIC)
-    hsi_shape = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(hsi_shape, cv2.COLOR_BGR2RGB)))
+    hsi_shape = ImageTk.PhotoImage(image=Image.fromarray(hsi_shape))
     HSI_SHAPE = tk.Label(window, image=hsi_shape, width=150, height=150)
     HSI_SHAPE.place(x=780, y=500)
-    HSI_SHAPE_label = tk.Label(window, text="HSI SHAPE",width=10, height=1)
+    HSI_SHAPE_label = tk.Label(window, text="HSI SHARP",width=10, height=1)
     HSI_SHAPE_label.place(x=780, y=655)
 
     forget_HSI()
