@@ -254,9 +254,11 @@ def smoothing_and_sharping():
     hsi_smooth = cv2.filter2D(hsi, -1, kernel)
     
     # set shape kernel
-    kernel = np.array([[0,1,0],[1,-4,1],[0,1,0]])
-    rgb_shape = cv2.filter2D(rgb, -1, kernel)
-    hsi_shape = cv2.filter2D(hsi, -1, kernel)
+    #kernel = np.array([[0,1,0],[1,-4,1],[0,1,0]])
+    #rgb_shape = cv2.filter2D(rgb, -1, kernel)
+    #hsi_shape = cv2.filter2D(hsi, -1, kernel)
+    rgb_shape = rgb + cv2.Laplacian(rgb,-1)
+    hsi_shape = hsi + cv2.Laplacian(hsi,-1)
 
 
     # SHOW the image
